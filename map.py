@@ -1,5 +1,6 @@
 import pygame
-from enum import Enum
+import spritesheet
+from enum import IntEnum
 
 #Tiles not pixels
 M_WIDTH = 28
@@ -9,56 +10,76 @@ TILE_WIDTH = 124
 WIN = pygame.display.set_mode((TEMP_WIDTH,TEMP_WIDTH))
 pygame.display.set_caption("packer test 1")
 
-BLUE     = (  0,   0, 255)
-BLACK    = (  0,   0,   0)
-SALMON   = (250, 128, 114)
-YELLOW   = (255, 255,   0)
-ORANGE   = (255, 127,   0)
-PINK     = (255,   0, 255)
-TURQUOISE= ( 64, 224, 208)
+BLACK = (0, 0, 0)
 
-EMPT = BLACK 
-WALL = BLUE
-COIN = SALMON
-PLET = TURQUOISE
-GATE = PINK
-PLAY = YELLOW
+class Tile(IntEnum):
+    WALL  = 0
+    COIN  = 1
+    POWER = 2
+    EMPTY = 3
+    GATE  = 4
 
-tiles= (
-        (WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, PLET, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, PLET, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, EMPT, WALL, WALL, EMPT, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, EMPT, WALL, WALL, EMPT, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, WALL, WALL, GATE, GATE, WALL, WALL, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, COIN, EMPT, EMPT, EMPT, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, EMPT, EMPT, EMPT, COIN, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, EMPT, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, EMPT, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, PLET, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, PLAY, PLAY, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, PLET, WALL),
-        (WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL),
-        (WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, WALL, WALL, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL, WALL, COIN, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, COIN, WALL),
-        (WALL, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, COIN, WALL),
-        (WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL),
-    )
+class TileMap:
+    def __init__(self,tiles):
+        self.tiles = tiles
 
-def draw(win):
+    def get_tile(self, x, y):
+        return self.tiles[x][y]
+
+    def is_wall(self, x, y):
+        return self.tiles[x][y] == Tile.WALL
+
+    def get_neighbor(self,x, y):
+        return [
+                (x, y - 1), 
+                (x, y + 1),
+                (x - 1, y),
+                (x + 1, y)
+                ]
+
+    def eat_coin(self, x, y):
+
+        if self.tiles[x][y] == Tile.COIN:
+            self.tiles[x][y] = Tile.EMPTY
+            return True
+
+        return False
+
+TILES = [
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.POWER, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.POWER, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.GATE, Tile.GATE, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.COIN, Tile.EMPTY,Tile.EMPTY,Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.COIN, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.EMPTY, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.POWER, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.EMPTY, Tile.EMPTY, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.POWER, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.COIN, Tile.WALL],
+        [Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL, Tile.WALL],
+        ]
+
+def draw(win,tiles):
     win.fill(BLACK)
     x = 0
     y = 0
@@ -73,14 +94,16 @@ def draw(win):
     pygame.time.delay(10)
     pygame.display.update()
 
-def main(win, width):
+def main(win):
     run= True
-    
+    game_map = TileMap(TILES)
+
     while run:
-        draw(win)
+        draw(win,game_map.tiles)
         for event in pygame.event.get():
             # Program Kill Switch
             if (event.type == pygame.QUIT):
                 run= False
             
-main(WIN, TEMP_WIDTH)
+
+main(WIN)

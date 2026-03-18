@@ -1,0 +1,1 @@
+, game_map.offset_x, game_map.offset_y

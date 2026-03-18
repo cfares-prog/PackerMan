@@ -7,17 +7,14 @@ M_WIDTH = 28
 M_HEIGHT = 31
 
 #pixels
-TEMP_WIDTH = 1080
+TEMP_WIDTH = 640
 TILE_WIDTH = 64
 
-#temp for testing
-WIN = pygame.display.set_mode((TEMP_WIDTH,TEMP_WIDTH))
-pygame.display.set_caption("packer test 1")
 
 BLACK = (0, 0, 0)
 class TileSprites:
     TILE_SIZE = 8
-    SCALE = 3.25
+    SCALE = 2.0
 
     sheet = SpriteSheet("sprites.png")
     test = sheet.get_sprite_by_grid(108,18,TILE_SIZE,TILE_SIZE)
@@ -76,6 +73,9 @@ class Tile(IntEnum):
 class TileMap:
     def __init__(self,tiles):
         self.tiles = tiles
+
+    offset_x = TileSprites.TILE_SIZE * ((TEMP_WIDTH // TileSprites.TILE_SIZE)* 0.175)
+    offset_y = TileSprites.TILE_SIZE * ((TEMP_WIDTH // TileSprites.TILE_SIZE)* 0.15)
 
     def get_tile(self, x, y):
         return self.tiles[x][y]
@@ -151,10 +151,11 @@ def draw(win,map):
     win.fill(BLACK)
     gap = TEMP_WIDTH// M_HEIGHT - 1
 
+    offset_x = TileSprites.TILE_SIZE * ((TEMP_WIDTH // TileSprites.TILE_SIZE)* 0.175)
+    offset_y = TileSprites.TILE_SIZE * ((TEMP_WIDTH // TileSprites.TILE_SIZE)* 0.15)
+
 
     sprites = TileSprites
-    offset_x = TileSprites.TILE_SIZE * 10
-    offset_y = TileSprites.TILE_SIZE * 4
 
     for row_index, row in enumerate(map.tiles):
         for col_index, tile in enumerate(row):
@@ -204,16 +205,3 @@ def draw(win,map):
 
     pygame.time.delay(10)
     pygame.display.update()
-
-def main(win):
-    run= True
-    game_map = TileMap(TILES)
-
-    while run:
-        draw(win,game_map)
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
-                run= False
-            
-
-main(WIN)

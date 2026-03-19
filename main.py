@@ -8,7 +8,7 @@ pygame.display.set_caption("packer test 1")
 def main(win):
     run= True
     game_map = map.TileMap(map.TILES)
-    packer= pacman(1, 2, game_map, game_map.offset_x, game_map.offset_y)
+    packer= pacman(1, 1, game_map, game_map.offset_x, game_map.offset_y)
     
     while run:
         map.draw(win,game_map)
@@ -18,15 +18,19 @@ def main(win):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run= False
-            elif event.type == pygame.KEYDOWN:
-                if pygame.key == pygame.K_w:
-                    print("u")
-                    packer.moveUp()
-                if pygame.key == pygame.K_d:
-                    packer.moveRight()
-                if pygame.key == pygame.K_a:
-                    packer.moveLeft()
-                if pygame.key == pygame.K_s:
-                    packer.moveDown()
+
+        pressed_key = pygame.key.get_pressed()
+        if pressed_key[pygame.K_w]:
+            print("w")
+            packer.move_up()
+        if pressed_key[pygame.K_d]:
+            print("d")
+            packer.move_right()
+        if pressed_key[pygame.K_a]:            
+            print("a")
+            packer.move_left()
+        if pressed_key[pygame.K_s]:            
+            print("s")
+            packer.move_down()
 
 main(WIN)

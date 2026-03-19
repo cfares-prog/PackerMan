@@ -1,48 +1,45 @@
 from sprite_loader import SpriteSheet
 import pygame
 
-class pacman:
-    spriteImage= SpriteSheet("sprites.png")
-    packer= spriteImage.get_sprite_scaled(135, 45, 8, 8, 1.0)
+class PackerSprites:
+
+    loader = SpriteSheet("temp.png");
+    frame_1 = loader.get_sprite_scaled(1,1,1,1,1)
+    frame_2 = loader.get_sprite_scaled(1,1,1,1,1)
+    frame_3 = loader.get_sprite_scaled(1,1,1,1,1)
+    frame_4 = loader.get_sprite_scaled(1,1,1,1,1)
+
+class Pacman:
     # x:135 y;45
     
     DIRECTIONS= {# x, y
         "down": (1, 0),
-        "up": (-1, 0),
-        "right":   (0, 1),
+        "up":  (-1, 0),
+        "right":(0, 1),
         "left": (0, -1),
     }
     
-    def __init__(self, x, y, map, oX, oY):
-        self.x= x
-        self.y= y
-        self.oX= oX
-        self.oY= oY
-        self.direction= self.DIRECTIONS["right"]
-        self.map= map
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.power = False
     
-    def draw(self, win, gap, map): 
-        self.map= map
-        win.blit(self.packer,(self.x* gap+ self.oX,self.y* gap+ self.oY))
+    def get_position(self):
+        return {"row": self.x , "col": self.y}
+
+    def set_power(self, status):
+        self.power = status
+
+    def draw(self, win, gap):
+        win.blit(packer,(self.x* gap+ self.x,self.y* gap+ self.y))
         pygame.time.delay(5)
         pygame.display.update()
-    
-    def move(self):
-        px= self.x + self.direction[0]
-        py= self.y + self.direction[1]
-        if not self.map.is_wall(px, py):
-            self.map.eat_coin(px, py)
-            x= px
-            y= py
         
-        
-        
-    def moveRight(self):
+    def move_right(self):
         self.direction= self.DIRECTIONS["right"]
-    def moveLeft(self):
+    def move_left(self):
         self.direction= self.DIRECTIONS["left"]
-        print("l")
-    def moveUp(self):
+    def move_up(self):
         self.direction= self.DIRECTIONS["up"]
-    def moveDown(self):
+    def move_down(self):
         self.direction= self.DIRECTIONS["down"]

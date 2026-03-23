@@ -1,4 +1,4 @@
-from pacman import pacman
+from pacman import Pacman
 import map
 import pygame
 
@@ -8,7 +8,7 @@ pygame.display.set_caption("packer test 1")
 def main(win):
     run= True
     game_map = map.TileMap(map.TILES)
-    packer= pacman(1, 1, game_map, game_map.offset_x, game_map.offset_y)
+    packer= Pacman(1, 1)
     
     while run:
         
@@ -29,9 +29,7 @@ def main(win):
         if pressed_key[pygame.K_s]:            
             packer.set_direction("down")
 
-        packer.step()
 
         map.draw(win,game_map)
-        packer.draw(win, map.TEMP_WIDTH// map.M_HEIGHT - 1, game_map)
 
 main(WIN)

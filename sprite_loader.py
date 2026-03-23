@@ -71,4 +71,4 @@ def run_inspector(file_path, tile_size=(9, 9)):
         clock.tick(60)
 
 if __name__ == "__main__":
-    run_inspector("sprites.png", tile_size=(9, 9))
+    run_inspector("sprites/packer_man.png", tile_size=(110, 110))

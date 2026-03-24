@@ -1,73 +1,115 @@
+from sprite_loader import SpriteSheet
+from enum import Enum
 import pygame
-from map import tiles, WALL, PLAY, M_WIDTH, M_HEIGHT, TEMP_WIDTH, TILE_WIDTH, WIN
+
+
+class PackerSprites:
+    TILE_WIDTH = 110
+    SCALE = 0.2
+    loader = SpriteSheet("sprites/packer_man.png")
+    
+    frames = [
+        loader.get_sprite_scaled(0, 0, TILE_WIDTH, TILE_WIDTH, SCALE),
+        loader.get_sprite_scaled(110, 0, TILE_WIDTH, TILE_WIDTH, SCALE),
+        loader.get_sprite_scaled(220, 0, TILE_WIDTH, TILE_WIDTH, SCALE),
+    ]
+
+    animations = {
+        "right": frames,
+        "left" : [pygame.transform.rotate(f, 180) for f in frames],
+        "up" : [pygame.transform.rotate(f, 90) for f in frames],
+        "down" : [pygame.transform.rotate(f, 270) for f in frames],
+    }
 
 class Pacman:
+    POWER_DURATION = 420 
 
-	_directions = {		# MARK AS PRIV
-			'left': (0, -1),
-			'up': (-1, 0),
-			'down': (1, 0),
-			'right': (0, 1)
-		}
+    DIRECTIONS = {
+        "right": (1, 0),
+        "left":  (-1, 0),
+        "down":  (0, 1),
+        "up":    (0, -1),
+    }
+    
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.power = False
+        self.direction = "right"
+        self.next_direction = "right"
+        
+        self.move_progress = 0
+        self.speed = 0.15
+        self.frame_index = 0
+        self.power_timer = self.POWER_DURATION
+    
+    def set_direction(self, name):
+        self.direction = name
 
-	def __init__(self, x, y):
-		self.x = x  # row
-		self.y = y  # column
+    def set_next_direction(self, name):
+        self.next_direction = name
 
-	def can_move(self, dx, dy):
-		new_x = self.x + dx
-		new_y = self.y + dy
-		if 0 <= new_x < M_HEIGHT and 0 <= new_y < M_WIDTH:
-			return tiles[new_x][new_y] != WALL
-		return False
+    def get_direction(self):
+        return self.direction
 
-	def move_until_fail(self, direction):
-		dx, dy = self._directions[direction]
-		moved = False
-		while self.can_move(dx, dy):
-			self.x += dx
-			self.y += dy
-			moved = True
-		return moved
+    def get_tile_position(self):
+        return int(self.y), int(self.x)
 
-	def draw(self, win, gap):
-		pygame.draw.rect(win, PLAY, (self.y * gap, self.x * gap, TILE_WIDTH, TILE_WIDTH))
+    def set_power(self, status):
+        self.power = status
 
-def find_pacman_start():
-	for i, row in enumerate(tiles):
-		for j, tile in enumerate(row):
-			if tile == PLAY:
-				return i, j
-	return 1, 1
+    def draw(self, win, tile_size, offset_x, offset_y):
+        dx, dy = self.DIRECTIONS[self.direction]
 
-def main():
-	pygame.init()
-	gap = TEMP_WIDTH // M_HEIGHT
-	x, y = find_pacman_start()
-	pacman = Pacman(x,y)
-	run = True
-	direction = None
-	while run:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				run = False
-			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_UP:
-					direction = 'up'
-				elif event.key == pygame.K_DOWN:
-					direction = 'down'
-				elif event.key == pygame.K_LEFT:
-					direction = 'left'
-				elif event.key == pygame.K_RIGHT:
-					direction = 'right'
-		if direction:
-			moved = pacman.move_until_fail(direction)
-			if not moved:
-				direction = None
-		WIN.fill((0, 0, 0))
-		for i, row in enumerate(tiles):
-			for j, tile in enumerate(row):
-				pygame.draw.rect(WIN, tile, (j * gap, i * gap, TILE_WIDTH, TILE_WIDTH))
-		pacman.draw(WIN, gap)
-		pygame.display.update()
-	pygame.quit()
+        px = (self.x + dx * self.move_progress) * tile_size + offset_x
+        py = (self.y + dy * self.move_progress) * tile_size + offset_y
+
+        frames = PackerSprites.animations[self.direction]
+        self.frame_index += self.speed
+        if self.frame_index >= len(frames):
+            self.frame_index = 0
+
+        frame = frames[int(self.frame_index)]
+        win.blit(frame, (px, py))
+
+    def check_death(self, ghost_positions):
+        if self.power:
+            return False
+        return (self.x, self.y) in ghost_positions
+
+
+    def step(self, game_map):
+        next_dx, next_dy = self.DIRECTIONS[self.next_direction]
+        next_x = self.x + next_dx
+        next_y = self.y + next_dy
+
+        if not game_map.is_wall(next_y, next_x):
+            self.direction = self.next_direction
+
+        dx, dy = self.DIRECTIONS[self.direction]
+        target_x = self.x + dx
+        target_y = self.y + dy
+
+        if game_map.is_wall(target_y, target_x):
+            self.move_progress = 0
+            return
+
+        self.move_progress += self.speed
+
+        if self.move_progress >= 1:
+            self.x = target_x
+            self.y = target_y
+            self.move_progress = 0
+            
+            game_map.eat_coin(self.y, self.x)
+            if game_map.eat_pellet(self.y, self.x):
+                #reset timer if pacman eats pellet while in power mode
+                self.power_timer = self.POWER_DURATION
+                self.set_power(True)
+
+            if self.power:
+                if self.power_timer > 0:
+                    self.power_timer -= 1
+                elif self.power_timer == 0:
+                    self.power = False
+                    self.power_timer = self.POWER_DURATION

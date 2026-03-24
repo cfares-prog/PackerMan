@@ -1,67 +1,154 @@
+from sprite_loader import SpriteSheet
+from enum import Enum
 import pygame
-from map import tiles, WALL, PLAY, M_WIDTH, M_HEIGHT, TEMP_WIDTH, TILE_WIDTH, WIN
-import random
+
+class States(Enum):
+    CHASE = 1
+    WITHDRAW = 2
+    REVIVE = 3
+
+class GhostSprites:
+    TILE_WIDTH = 110
+    SCALE = 0.2
+
+    loader = SpriteSheet("ghosts.png")
+    cyan_sprites = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
+
+    pink_sprites = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
+
+    orange_sprites = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
+
+    red_sprites = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
+
+    scaredy = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
+
+    revive = {
+            "up": loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "down":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "left":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+            "right":loader.get_sprite_scaled(0,0,TILE_WIDTH, TILE_WIDTH, SCALE),
+    }
 
 class Ghost:
 
-	def __init__(self, x, y, color):
-		self.x = x  # row
-		self.y = y  # column
-		self.color = color
+    DIRECTIONS = {
+        "right": (1, 0),
+        "left":  (-1, 0),
+        "down":  (0, 1),
+        "up":    (0, -1),
+    }
 
-	def can_move(self, dx, dy):
-		new_x = self.x + dx
-		new_y = self.y + dy
-		if 0 <= new_x < M_HEIGHT and 0 <= new_y < M_WIDTH:
-			return tiles[new_x][new_y] != WALL
-		return False
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.frame_index = 0
+        
+        self.direction = "up"
+        self.next_direction = "up"
+        self.state = States.CHASE
+        
+        self.move_progress = 0
+        self.speed = 0.1
+        match color:
+            case "orange": self.sprites = GhostSprites.orange_sprites
+            case "cyan": self.sprites = GhostSprites.cyan_sprites
+            case "pink": self.sprites = GhostSprites.pink_sprites
+            case "red": self.sprites = GhostSprites.red_sprites
 
-	def move_until_fail(self, direction):
-		directions = {
-			'left': (0, -1),
-			'up': (-1, 0),
-			'down': (1, 0),
-			'right': (0, 1)
-		}
-		dx, dy = directions[direction]
-		moved = False
-		while self.can_move(dx, dy):
-			self.x += dx
-			self.y += dy
-			moved = True
-		return moved
+    def set_direction(self, name):
+        self.direction = name
 
-	def draw(self, win, gap):
-		pygame.draw.rect(win, PLAY, (self.y * gap, self.x * gap, TILE_WIDTH, TILE_WIDTH))
+    def set_next_direction(self,name):
+        self.next_direction = name
 
+    def get_direction(self):
+        return self.direction
 
-def find_ghost_start():
-	for i, row in enumerate(tiles):
-		for j, tile in enumerate(row):
-			if tile == PLAY:
-				return i, j
-	return 1, 1             # IDK WHERE
+    def get_tile_position(self):
+        return int(self.y), int(self.x)
 
-def main():
-	pygame.init()
-	gap = TEMP_WIDTH // M_HEIGHT
-	x, y = find_ghost_start()
-	ghost = Ghost(x, y, "white")
-	run = True
-	direction = random.choice(['left', 'up', 'down', 'right'])
-	while run:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				run = False
+    def step(self, game_map, pacman):
+        next_dx, next_dy = self.DIRECTIONS[self.next_direction]
+        next_x = self.x + next_dx
+        next_y = self.y + next_dy
 
-		moved = ghost.move_until_fail(direction)
-		if not moved:
-			direction = random.choice(['left', 'up', 'down', 'right'])
+        if not game_map.is_wall(next_y, next_x):
+            self.direction = self.next_direction
 
-		WIN.fill((0, 0, 0))
-		for i, row in enumerate(tiles):
-			for j, tile in enumerate(row):
-				pygame.draw.rect(WIN, tile, (j * gap, i * gap, TILE_WIDTH, TILE_WIDTH))
-		ghost.draw(WIN, gap)
-		pygame.display.update()
-	pygame.quit()
+        dx, dy = self.DIRECTIONS[self.direction]
+        target_x = self.x + dx
+        target_y = self.y + dy
+
+        if game_map.is_wall(target_y, target_x):
+            self.move_progress = 0
+            return
+
+        self.move_progress += self.speed
+
+        if self.move_progress >= 1:
+            self.x = target_x
+            self.y = target_y
+            self.move_progress = 0
+
+    def draw(self, win, tile_size, offset_x, offset_y):
+        dx, dy = self.DIRECTIONS[self.direction]
+
+        px = (self.x + dx * self.move_progress) * tile_size + offset_x
+        py = (self.y + dy * self.move_progress) * tile_size + offset_y
+        if self.state == States.WITHDRAW:
+            active_sprites = GhostSprites.scaredy
+        elif self.state == States.REVIVE:
+            active_sprites = GhostSprites.revive
+        else:
+            active_sprites = self.sprites
+
+        sprite = active_sprites[self.direction]
+
+        win.blit(sprite, (px, py))
+
+    def update_state(self,pacman):
+        
+        if pacman.power and self.state == States.CHASE:
+            self.state = States.WITHDRAW
+            self.speed = 0.05
+
+            opposites = {"up": "down", "down": "up", "left": "right", "right": "left"}
+            self.set_next_direction(opposites[self.direction])
+
+        elif not pacman.power and self.state == States.WITHDRAW:
+            self.state = States.CHASE
+            self.speed = 0.1
+
+    def check_collision(self, pacman):
+        if (int(self.x), int(self.y)) == (int(pacman.x), int(pacman.y)):
+            if self.state == States.WITHDRAW:
+                self.state = States.REVIVE
+                self.speed = 0.2 
+
+            elif self.state == States.CHASE:
+                return "GAME OVER"

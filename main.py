@@ -1,4 +1,4 @@
-from pacman import Pacman
+from entities.pacman import Pacman
 import map
 import pygame
 

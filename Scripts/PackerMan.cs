@@ -3,38 +3,49 @@ using System;
 
 public partial class PackerMan : CharacterBody2D
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
+	[Export]
+	private int health= 100;
+	[Export]
+	private float baseSpeed = 100.0f;
+	private Vector2 lastDirection= Vector2.Zero;
+	private Vector2 direction= Vector2.Zero;
+	private AnimatedSprite2D animatedSprite;
+
+    public override void _Ready()
+    {
+		animatedSprite= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		animatedSprite.Play("idle");
+        base._Ready();
+    }
+
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
-
-		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
-
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-			velocity.Y = JumpVelocity;
-		}
-
+		Position= (Vector2I)Position;
+		lastDirection= direction;
 		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
+		switch (Input.GetVector("left", "right", "up", "down"))
 		{
-			velocity.X = direction.X * Speed;
+			case (1,0):
+				direction= Vector2.Right;
+				animatedSprite.Play("right");
+			break;
+			case (-1,0):
+				direction= Vector2.Left;
+				animatedSprite.Play("left");
+			break;
+			case (0,1):
+				direction= Vector2.Down;
+				animatedSprite.Play("down");
+			break;
+			case (0,-1):
+				direction= Vector2.Up;
+				animatedSprite.Play("up");
+			break;
+			default:
+			break;
 		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-		}
-
-		Velocity = velocity;
+		Velocity = direction * baseSpeed * (float)delta;
 		MoveAndSlide();
 	}
 }

@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-WIN_SIZE = 800
+WIN_SIZE = 700
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (255, 0, 0)
@@ -71,4 +71,5 @@ def run_inspector(file_path, tile_size=(9, 9)):
         clock.tick(60)
 
 if __name__ == "__main__":
-    run_inspector("sprites/packer_man.png", tile_size=(110, 110))
+    size= 16
+    run_inspector("sprites/ghostsSheet.png", tile_size=(size, size))

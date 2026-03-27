@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://dyeauftot51yd"]
 
+[ext_resource type="Script" uid="uid://7gei6na87por" path="res://Scripts/PackerMan.cs" id="1_8jk5r"]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_ntgv6"]
 
 [node name="PackerMan" type="CharacterBody2D" unique_id=1629016661]
+script = ExtResource("1_8jk5r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1711763837]
 shape = SubResource("CircleShape2D_ntgv6")

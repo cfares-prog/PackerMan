@@ -3,18 +3,20 @@
 [ext_resource type="Script" uid="uid://hil8gb2pnsba" path="res://Scripts/coin.gd" id="1_jgi06"]
 [ext_resource type="Texture2D" uid="uid://d35n64tqjjvvq" path="res://Sprites/Coin.png" id="1_w6diy"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_j6u3q"]
-size = Vector2(4, 4)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgi06"]
 
 [node name="Coin" type="Area2D" unique_id=444769293]
 collision_layer = 0
 collision_mask = 4
+input_pickable = false
+monitorable = false
 script = ExtResource("1_jgi06")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1315075168]
-shape = SubResource("RectangleShape2D_j6u3q")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=476356645]
 texture = ExtResource("1_w6diy")
 
-[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1405465911]
+scale = Vector2(0.295, 0.295)
+shape = SubResource("RectangleShape2D_jgi06")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -15,6 +15,7 @@ public partial class Pellet : Area2D
         if (body.IsInGroup("Player"))
         {
             gameManager.AddScore(gameManager.PelletScore);
+            gameManager.PowerUp();
             QueueFree();
         }
     }

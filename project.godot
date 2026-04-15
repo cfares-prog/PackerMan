@@ -34,6 +34,7 @@ project/assembly_name="PackerMan"
 [global_group]
 
 Player=""
+Ghost=""
 
 [input]
 

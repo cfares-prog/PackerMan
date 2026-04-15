@@ -1274,7 +1274,6 @@ zoom = Vector2(1.61, 1.61)
 [node name="PackerMan" parent="." unique_id=1629016661 instance=ExtResource("4_myvm1")]
 z_index = 10
 position = Vector2(231.99998, 376)
-collision_mask = 3
 baseSpeed = 10000.0
 
 [node name="Ghosts" type="Node" parent="." unique_id=1630293513]

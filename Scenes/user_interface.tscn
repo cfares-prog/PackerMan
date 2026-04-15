@@ -15,29 +15,22 @@ script = ExtResource("1_62x38")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-columns = 2
 
-[node name="TimeTxt" type="Label" parent="GridContainer" unique_id=1423458127]
+[node name="Life" type="Label" parent="GridContainer" unique_id=855369506]
 layout_mode = 2
-text = "Time:"
+text = "Life: 3"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Time" type="Label" parent="GridContainer" unique_id=396023820]
 layout_mode = 2
-text = "00:00"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ScoreTxt" type="Label" parent="GridContainer" unique_id=1240759354]
-layout_mode = 2
-text = "Score:"
+text = "Time: 00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Score" type="Label" parent="GridContainer" unique_id=1796808721]
 layout_mode = 2
-text = "000000"
+text = "Score 000000"
 horizontal_alignment = 1
 vertical_alignment = 1
 

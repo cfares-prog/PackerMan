@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c2lh55qrv5rgo"]
 
-[ext_resource type="Script" uid="uid://d083mrifjrwp1" path="res://Scenes/Pellet.cs" id="1_v7keh"]
+[ext_resource type="Script" uid="uid://d083mrifjrwp1" path="res://Scripts/Pellet.cs" id="1_v7keh"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_v7keh"]
 load_path = "res://.godot/imported/Pellet.png-8381cfad6faaf3160cb3d313ded42e5a.ctex"

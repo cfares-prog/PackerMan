@@ -1090,6 +1090,7 @@ z_index = 5
 scale = Vector2(6.66, 6.66)
 collision_layer = 2
 collision_mask = 5
+motion_mode = 1
 script = ExtResource("1_e3r4w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1101845614]

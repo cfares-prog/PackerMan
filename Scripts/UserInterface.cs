@@ -3,8 +3,10 @@ using System;
 
 public partial class UserInterface : Control
 {
+    private Global gameManager;
 	private Label timeComp;
 	private Label scoreComp;
+	private Label lifeComp;
 	private int _time;
 	
 	// Called when the node enters the scene tree for the first time.
@@ -12,11 +14,15 @@ public partial class UserInterface : Control
 	{
 		timeComp= GetNode<Label>("GridContainer/Time");
 		scoreComp= GetNode<Label>("GridContainer/Score");
+		lifeComp= GetNode<Label>("GridContainer/Life");
 		
         // Connect to the global signal
-        var gameManager = GetNode<Global>("/root/Global");
-        gameManager.ScoreChanged += UpdateScore;
+        gameManager = GetNode<Global>("/root/Global");
+        gameManager.ScoreChangedSig += UpdateScore;
+		gameManager.LifeLostSig += UpdateLife;
+
         scoreComp.Text = $"Score: {gameManager.Score}";
+        lifeComp.Text = $"Life: {gameManager.Life}";
 
 		base._Ready();
 	}
@@ -24,16 +30,22 @@ public partial class UserInterface : Control
 	private void TimerIter()
 	{
         _time++;
-        
-        // Calculate minutes and seconds
         int minutes = _time / 60;
         int seconds = _time % 60;
 
-        // Update the label text with "MM:SS" formatting
-        timeComp.Text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        timeComp.Text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
 	}
     private void UpdateScore(int newScore)
     {
         scoreComp.Text = $"Score: {newScore}";
+    }
+    private void UpdateLife(int newLife)
+    {
+		if (gameManager.Life < 1)
+		{
+        	lifeComp.Text = $"Life: Dead";
+			return;
+		}
+        lifeComp.Text = $"Life: {newLife}";
     }
 }

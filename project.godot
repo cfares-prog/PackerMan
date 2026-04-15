@@ -15,6 +15,10 @@ run/main_scene="uid://cdsqaunc1scga"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Global="*uid://ben2yyfgx8lr4"
+
 [display]
 
 window/size/viewport_width=1238
@@ -26,6 +30,10 @@ window/vsync/vsync_mode=0
 [dotnet]
 
 project/assembly_name="PackerMan"
+
+[global_group]
+
+Player=""
 
 [input]
 

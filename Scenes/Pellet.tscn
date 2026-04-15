@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c2lh55qrv5rgo"]
 
-[ext_resource type="Script" uid="uid://legyvpml0a0t" path="res://Scripts/pellet.gd" id="1_jatx1"]
+[ext_resource type="Script" uid="uid://d083mrifjrwp1" path="res://Scenes/Pellet.cs" id="1_v7keh"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_v7keh"]
 load_path = "res://.godot/imported/Pellet.png-8381cfad6faaf3160cb3d313ded42e5a.ctex"
@@ -11,7 +11,7 @@ size = Vector2(8, 8)
 [node name="Pellet" type="Area2D" unique_id=444769293]
 collision_layer = 0
 collision_mask = 4
-script = ExtResource("1_jatx1")
+script = ExtResource("1_v7keh")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=476356645]
 texture = SubResource("CompressedTexture2D_v7keh")

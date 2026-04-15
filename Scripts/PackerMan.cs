@@ -15,6 +15,7 @@ public partial class PackerMan : CharacterBody2D
     {
 		animatedSprite= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animatedSprite.Play("idle");
+		AddToGroup("Player", true);
         base._Ready();
     }
 

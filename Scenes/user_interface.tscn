@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cl6eoc5r453cc"]
+
+[ext_resource type="Script" uid="uid://cr77jv7e36s2" path="res://Scripts/UserInterface.cs" id="1_62x38"]
+
+[node name="UserInterface" type="Control" unique_id=731499096]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_62x38")
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1419234689]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 2
+
+[node name="TimeTxt" type="Label" parent="GridContainer" unique_id=1423458127]
+layout_mode = 2
+text = "Time:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Time" type="Label" parent="GridContainer" unique_id=396023820]
+layout_mode = 2
+text = "00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreTxt" type="Label" parent="GridContainer" unique_id=1240759354]
+layout_mode = 2
+text = "Score:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="GridContainer" unique_id=1796808721]
+layout_mode = 2
+text = "000000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="." unique_id=1971811009]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="TimerIter"]

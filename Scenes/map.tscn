@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c2lh55qrv5rgo" path="res://Scenes/Pellet.tscn" id="3_p3ir5"]
 [ext_resource type="PackedScene" uid="uid://dyeauftot51yd" path="res://Scenes/packer_man.tscn" id="4_myvm1"]
 [ext_resource type="PackedScene" uid="uid://b3rcj6kh515g8" path="res://Scenes/ghost.tscn" id="5_q0mm3"]
+[ext_resource type="PackedScene" uid="uid://cl6eoc5r453cc" path="res://Scenes/user_interface.tscn" id="6_np2xp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_26yhd"]
 texture = ExtResource("1_ci6au")
@@ -1273,7 +1274,6 @@ zoom = Vector2(1.61, 1.61)
 [node name="PackerMan" parent="." unique_id=1629016661 instance=ExtResource("4_myvm1")]
 z_index = 10
 position = Vector2(231.99998, 376)
-collision_layer = 4
 collision_mask = 3
 baseSpeed = 10000.0
 
@@ -1281,90 +1281,65 @@ baseSpeed = 10000.0
 
 [node name="Ghost" parent="Ghosts" unique_id=1779564670 instance=ExtResource("5_q0mm3")]
 position = Vector2(184, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost2" parent="Ghosts" unique_id=1641559484 instance=ExtResource("5_q0mm3")]
 position = Vector2(184, 232)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost3" parent="Ghosts" unique_id=1490840199 instance=ExtResource("5_q0mm3")]
 position = Vector2(184, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost4" parent="Ghosts" unique_id=1991289568 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost5" parent="Ghosts" unique_id=1713886101 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 232)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost6" parent="Ghosts" unique_id=984054984 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost7" parent="Ghosts" unique_id=505252880 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost8" parent="Ghosts" unique_id=30689028 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost9" parent="Ghosts" unique_id=2027682439 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 232)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost10" parent="Ghosts" unique_id=1526812147 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost11" parent="Ghosts" unique_id=1132141995 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 232)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost12" parent="Ghosts" unique_id=52707985 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost13" parent="Ghosts" unique_id=372885410 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 216)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost14" parent="Ghosts" unique_id=909126176 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost15" parent="Ghosts" unique_id=1101158033 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost16" parent="Ghosts" unique_id=1023801035 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 248)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost17" parent="Ghosts" unique_id=700735920 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 232)
-collision_layer = 2
-collision_mask = 5
 
 [node name="Ghost18" parent="Ghosts" unique_id=1386821392 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 232)
-collision_layer = 2
-collision_mask = 5
+
+[node name="UserInterface" parent="." unique_id=731499096 instance=ExtResource("6_np2xp")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 464.0
+offset_top = 32.0
+offset_right = 464.0
+offset_bottom = 32.0
+grow_horizontal = 1
+grow_vertical = 1

@@ -13,6 +13,7 @@ public partial class PackerMan : CharacterBody2D
 
 	private bool powerUp = false;
 	private bool isHit = false;
+	private bool isPlayerControlled = true;
 
 	private Vector2 lastDirection= Vector2.Zero;
 	private Vector2 direction= Vector2.Zero;
@@ -55,10 +56,15 @@ public partial class PackerMan : CharacterBody2D
 	// for physics logic
 	public override void _PhysicsProcess(double delta)
 	{
-		Position= (Vector2I)Position;
 		lastDirection= direction;
 		// Get the input direction and handle the movement/deceleration.
-		switch (Input.GetVector("left", "right", "up", "down"))
+		Vector2 direct= Vector2.Zero;
+
+		if (isPlayerControlled){
+			direct= Input.GetVector("left", "right", "up", "down");
+		}
+
+		switch (direct)
 		{
 			case (1,0):
 				direction= Vector2.Right;
@@ -119,5 +125,25 @@ public partial class PackerMan : CharacterBody2D
 		await ToSignal(GetTree().CreateTimer(vulTime), SceneTreeTimer.SignalName.Timeout);
 		isHit= false;
 	}
+
+	public void goUp()
+	{
+		direction= Vector2.Up;
+	}
+	public void goDown()
+	{
+		direction= Vector2.Down;
+	}
+	public void goLeft()
+	{
+		direction= Vector2.Left;
+	}
+	public void goRight()
+	{
+		direction= Vector2.Right;
+	}
+
+	public void enablePlayerControl(){ isPlayerControlled = true; }
+	public void disablePlayerControl(){ isPlayerControlled = false; }
 
 }

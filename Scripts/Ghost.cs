@@ -3,13 +3,14 @@ using System;
 
 public partial class Ghost : CharacterBody2D
 {
+	public enum STATE { CHASE, FLEE, REVIVE};
+	
 	private Global manager;
+	private STATE state= STATE.CHASE;
 	[Export]
-	private string color = "red";
+	public string color = "red";
 	[Export]
 	private float baseSpeed = 100.0f;
-	[Export]
-	private Node movementAI;
 	private AnimatedSprite2D animatedSprite;
 	public Vector2 direction= Vector2.Zero;
 
@@ -52,19 +53,41 @@ public partial class Ghost : CharacterBody2D
 
 	// Called every frame at a fixed FPS. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta) {
-		Velocity = direction * baseSpeed * (float)delta;
+		Velocity = direction * baseSpeed ;
 		MoveAndSlide();
-		base._PhysicsProcess(delta);
 	}
 
 	// temporary flee state enabler func
 	public void DoFlee()
 	{
 		GD.Print($"{Name}: FLEE!!!");
+		state= STATE.FLEE;
 	}
 	// temporary chase state enabler func
 	public void DoChase()
 	{
 		GD.Print($"{Name}: Chase.");
+		state= STATE.CHASE;
 	}
+	public void goUp()
+	{
+		direction= Vector2.Up;
+	}
+	public void goDown()
+	{
+		direction= Vector2.Down;
+	}
+	public void goLeft()
+	{
+		direction= Vector2.Left;
+	}
+	public void goRight()
+	{
+		direction= Vector2.Right;
+	}
+	public STATE getState()
+	{
+		return state;
+	}
+
 }

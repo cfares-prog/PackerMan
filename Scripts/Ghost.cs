@@ -8,7 +8,8 @@ public partial class Ghost : CharacterBody2D
 	private Global manager;
 	private STATE state= STATE.CHASE;
 	[Export]
-	public string color = "red";
+	public string baseColor = "red";
+	private string color;
 	[Export]
 	private float baseSpeed = 100.0f;
 	private AnimatedSprite2D animatedSprite;
@@ -24,13 +25,27 @@ public partial class Ghost : CharacterBody2D
 		manager.GhostFleeSig += DoFlee;
 		manager.GhostChaseSig += DoChase;
 
+		color= baseColor;
+
 		AddToGroup("Ghost", true);
         base._Ready();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta) {
-
+		if (state.Equals(STATE.CHASE))
+		{
+			color= baseColor;
+		}
+		else if (state.Equals(STATE.FLEE))
+		{
+			color= "withdraw";
+		}
+		else if (state.Equals(STATE.REVIVE))
+		{
+			color= "dead";
+		}
+		
 		switch (direction)
 		{
 			case (1,0):

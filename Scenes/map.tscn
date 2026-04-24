@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cdsqaunc1scga"]
 
+[ext_resource type="Script" uid="uid://bk36fkx8wh6u5" path="res://Scripts/Map.cs" id="1_4c2oa"]
 [ext_resource type="Texture2D" uid="uid://bnlwupvm5qj4p" path="res://Sprites/wall.png" id="1_ci6au"]
 [ext_resource type="PackedScene" uid="uid://cyuuufigm6dcp" path="res://Scenes/coin.tscn" id="2_26yhd"]
 [ext_resource type="PackedScene" uid="uid://c2lh55qrv5rgo" path="res://Scenes/Pellet.tscn" id="3_p3ir5"]
@@ -508,6 +509,7 @@ terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 sources/1 = SubResource("TileSetAtlasSource_26yhd")
 
 [node name="Map" type="Node2D" unique_id=554824992]
+script = ExtResource("1_4c2oa")
 
 [node name="TileMap" type="TileMap" parent="." unique_id=736253882]
 tile_set = SubResource("TileSet_p3ir5")

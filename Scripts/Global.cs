@@ -6,7 +6,7 @@ public partial class Global : Node
     [Signal]
     public delegate void ScoreChangedSigEventHandler(int newScore);
     [Signal]
-    public delegate void LifeLostSigEventHandler(int curLife);
+    public delegate void PackerHitSigEventHandler();
     [Signal]
     public delegate void PowerUpSigEventHandler();
     [Signal]
@@ -15,13 +15,11 @@ public partial class Global : Node
     public delegate void GhostChaseSigEventHandler();
 
 
-	public int Life;
 	public int CoinScore { get; private set; }
 	public int PelletScore { get; private set; }
     public int Score { get; private set; }
 
 	public override void _Ready() {
-		Life = 3;
 		CoinScore =  50;
 		PelletScore = 1000;
 		Score = 0;
@@ -46,9 +44,7 @@ public partial class Global : Node
     }
     public void UpdateLife()
     {
-		Life= Life < 1 ? 0 : Life - 1;
-		// GD.Print(Life);
-        EmitSignal(SignalName.LifeLostSig, Life);
+        EmitSignal(SignalName.PackerHitSig);
     }
 
 }

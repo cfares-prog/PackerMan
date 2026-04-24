@@ -16,12 +16,6 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Life" type="Label" parent="GridContainer" unique_id=855369506]
-layout_mode = 2
-text = "Life: 3"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Time" type="Label" parent="GridContainer" unique_id=396023820]
 layout_mode = 2
 text = "Time: 00:00"

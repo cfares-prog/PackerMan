@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://cl6eoc5r453cc" path="res://Scenes/user_interface.tscn" id="6_np2xp"]
 [ext_resource type="Script" uid="uid://b7hi02vhoq0ls" path="res://Scripts/GeneticAlgorithm.cs" id="7_w7jjh"]
 [ext_resource type="Script" uid="uid://bhsfk84vwsqkl" path="res://Scripts/RandomGhost.cs" id="8_6q3n4"]
+[ext_resource type="PackedScene" uid="uid://cf1ubcspuidxd" path="res://Scenes/teleport.tscn" id="10_olcgw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_26yhd"]
 texture = ExtResource("1_ci6au")
@@ -1356,3 +1357,10 @@ packer = NodePath("../PackerMan")
 [node name="RandomGhost" type="Node" parent="GhostAIs" unique_id=1475388942 node_paths=PackedStringArray("ghost")]
 script = ExtResource("8_6q3n4")
 ghost = NodePath("../../Ghosts/Ghost7")
+
+[node name="Teleport" parent="." unique_id=1973764167 instance=ExtResource("10_olcgw")]
+position = Vector2(24, 232)
+
+[node name="Teleport2" parent="." unique_id=782483942 instance=ExtResource("10_olcgw")]
+position = Vector2(424, 232)
+rotation = 3.1415927

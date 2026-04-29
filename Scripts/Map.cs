@@ -24,7 +24,6 @@ public partial class Map : Node2D
 	private void ResetGame()
 	{
 		GetTree().ReloadCurrentScene();
-		
 	}
 
 }

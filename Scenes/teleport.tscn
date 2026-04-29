@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cf1ubcspuidxd"]
+
+[ext_resource type="Script" uid="uid://cqdva1ugbfjg0" path="res://Scripts/Teleport.cs" id="1_38lr0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dlo4w"]
+size = Vector2(32, 32)
+
+[node name="Teleport" type="Area2D" unique_id=1973764167]
+collision_layer = 0
+collision_mask = 6
+script = ExtResource("1_38lr0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1534572349]
+shape = SubResource("RectangleShape2D_dlo4w")
+
+[node name="dest" type="Marker2D" parent="." unique_id=758060737]
+position = Vector2(368, 0)

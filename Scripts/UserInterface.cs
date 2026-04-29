@@ -17,6 +17,7 @@ public partial class UserInterface : Control
         // Connect to the global signal
         gameManager = GetNode<Global>("/root/Global");
         gameManager.ScoreChangedSig += UpdateScore;
+        gameManager.PackerHitSig += ResetGame;
 
         scoreComp.Text = $"Score: {gameManager.Score}";
 
@@ -34,5 +35,11 @@ public partial class UserInterface : Control
     private void UpdateScore(int newScore)
     {
         scoreComp.Text = $"Score: {newScore}";
+    }
+
+    private void ResetGame()
+    {
+        gameManager.ScoreChangedSig -= UpdateScore;
+        gameManager.PackerHitSig -= ResetGame;
     }
 }

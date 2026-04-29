@@ -24,6 +24,7 @@ public partial class Ghost : CharacterBody2D
         manager = GetNode<Global>("/root/Global");
 		manager.GhostFleeSig += DoFlee;
 		manager.GhostChaseSig += DoChase;
+		manager.PackerHitSig += ResetGame;
 
 		color= baseColor;
 
@@ -103,6 +104,13 @@ public partial class Ghost : CharacterBody2D
 	public STATE getState()
 	{
 		return state;
+	}
+
+	public void ResetGame()
+	{
+		manager.GhostFleeSig -= DoFlee;
+		manager.GhostChaseSig -= DoChase;
+		manager.PackerHitSig -= ResetGame;
 	}
 
 }

@@ -14,14 +14,10 @@ public partial class Global : Node
     [Signal]
     public delegate void GhostChaseSigEventHandler();
 
-
-	public int CoinScore { get; private set; }
-	public int PelletScore { get; private set; }
+    
     public int Score { get; private set; }
 
 	public override void _Ready() {
-		CoinScore =  50;
-		PelletScore = 1000;
 		Score = 0;
 		base._Ready();
 	}
@@ -44,6 +40,7 @@ public partial class Global : Node
     }
     public void UpdateLife()
     {
+		Score = 0;
         EmitSignal(SignalName.PackerHitSig);
     }
 

@@ -23,6 +23,7 @@ public partial class PackerMan : CharacterBody2D
     {
 		manager = GetNode<Global>("/root/Global");
 		manager.PowerUpSig += PowerUpPacker;
+		manager.PackerHitSig += ResetGame;
 
 		animatedSprite= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animatedSprite.Play("idle");
@@ -146,4 +147,9 @@ public partial class PackerMan : CharacterBody2D
 	public void enablePlayerControl(){ isPlayerControlled = true; }
 	public void disablePlayerControl(){ isPlayerControlled = false; }
 
+	private void ResetGame()
+	{
+		manager.PackerHitSig -= ResetGame;
+		manager.PowerUpSig -= PowerUpPacker;
+	}
 }

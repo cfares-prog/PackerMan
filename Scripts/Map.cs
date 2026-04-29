@@ -13,7 +13,6 @@ public partial class Map : Node2D
         gameManager = GetNode<Global>("/root/Global");
 
 		gameManager.PackerHitSig += ResetGame;
-
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,6 +22,7 @@ public partial class Map : Node2D
 
 	private void ResetGame()
 	{
+		gameManager.PackerHitSig -= ResetGame;
 		GetTree().ReloadCurrentScene();
 	}
 

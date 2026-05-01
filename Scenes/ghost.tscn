@@ -282,13 +282,13 @@ region = Rect2(32, 240, 16, 16)
 atlas = ExtResource("1_3mxmt")
 region = Rect2(96, 240, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p4wdi"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_3n3rc"]
 atlas = ExtResource("1_3mxmt")
-region = Rect2(0, 48, 16, 16)
+region = Rect2(32, 224, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_w60pv"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_lmrwo"]
 atlas = ExtResource("1_3mxmt")
-region = Rect2(64, 48, 16, 16)
+region = Rect2(96, 224, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mw2s0"]
 atlas = ExtResource("1_3mxmt")
@@ -437,6 +437,14 @@ region = Rect2(0, 64, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_gu7qg"]
 atlas = ExtResource("1_3mxmt")
 region = Rect2(64, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p4wdi"]
+atlas = ExtResource("1_3mxmt")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w60pv"]
+atlas = ExtResource("1_3mxmt")
+region = Rect2(64, 48, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ho5n2"]
 atlas = ExtResource("1_3mxmt")
@@ -847,10 +855,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_p4wdi")
+"texture": SubResource("AtlasTexture_3n3rc")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_w60pv")
+"texture": SubResource("AtlasTexture_lmrwo")
 }],
 "loop": true,
 "name": &"right_gold",
@@ -1100,4 +1108,4 @@ shape = SubResource("CircleShape2D_e3r4w")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1572203640]
 scale = Vector2(0.15, 0.15)
 sprite_frames = SubResource("SpriteFrames_yo8bj")
-animation = &"idle1"
+animation = &"down_aqua"

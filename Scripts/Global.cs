@@ -14,7 +14,7 @@ public partial class Global : Node
     [Signal]
     public delegate void GhostChaseSigEventHandler();
 
-    
+    public int time { get; set; }
     public int Score { get; private set; }
 
 	public override void _Ready() {
@@ -40,7 +40,7 @@ public partial class Global : Node
     }
     public void UpdateLife()
     {
-		Score = 0;
+		Score /= 3;
         EmitSignal(SignalName.PackerHitSig);
     }
 

@@ -18,6 +18,10 @@ public partial class PackerMan : CharacterBody2D
 	private Vector2 lastDirection= Vector2.Zero;
 	private Vector2 direction= Vector2.Zero;
 	private AnimatedSprite2D animatedSprite;
+	public RayCast2D upRay;
+	public RayCast2D downRay;
+	public RayCast2D rightRay;
+	public RayCast2D leftRay;
 
     public override void _Ready()
     {
@@ -27,6 +31,16 @@ public partial class PackerMan : CharacterBody2D
 
 		animatedSprite= GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animatedSprite.Play("idle");
+
+		upRay= GetNode<RayCast2D>("ColBox/upRay");
+		downRay= GetNode<RayCast2D>("ColBox/downRay");
+		rightRay= GetNode<RayCast2D>("ColBox/rightRay");
+		leftRay= GetNode<RayCast2D>("ColBox/leftRay");
+
+		upRay.Enabled= false;
+		downRay.Enabled= false;
+		rightRay.Enabled= false;
+		leftRay.Enabled= false;
 		
 		AddToGroup("Player", true);
         base._Ready();
@@ -69,15 +83,31 @@ public partial class PackerMan : CharacterBody2D
 		{
 			case (1,0):
 				direction= Vector2.Right;
+				upRay.Enabled= false;
+				downRay.Enabled= false;
+				rightRay.Enabled= true;
+				leftRay.Enabled= false;
 			break;
 			case (-1,0):
 				direction= Vector2.Left;
+				upRay.Enabled= false;
+				downRay.Enabled= false;
+				rightRay.Enabled= false;
+				leftRay.Enabled= true;
 			break;
 			case (0,1):
 				direction= Vector2.Down;
+				upRay.Enabled= false;
+				downRay.Enabled= true;
+				rightRay.Enabled= false;
+				leftRay.Enabled= false;
 			break;
 			case (0,-1):
 				direction= Vector2.Up;
+				upRay.Enabled= true;
+				downRay.Enabled= false;
+				rightRay.Enabled= false;
+				leftRay.Enabled= false;
 			break;
 			default:
 			break;

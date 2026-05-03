@@ -8,8 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://b3rcj6kh515g8" path="res://Scenes/ghost.tscn" id="5_q0mm3"]
 [ext_resource type="PackedScene" uid="uid://cl6eoc5r453cc" path="res://Scenes/user_interface.tscn" id="6_np2xp"]
 [ext_resource type="Script" uid="uid://b7hi02vhoq0ls" path="res://Scripts/GeneticAlgorithm.cs" id="7_w7jjh"]
-[ext_resource type="Script" uid="uid://bhsfk84vwsqkl" path="res://Scripts/RandomGhost.cs" id="8_6q3n4"]
+[ext_resource type="Script" uid="uid://bhsfk84vwsqkl" path="res://Scripts/GhostAiScripts/RandomGhost.cs" id="8_6q3n4"]
+[ext_resource type="Script" uid="uid://cx00rtw4w2oai" path="res://Scripts/GhostAiScripts/VariousPatrolGhostRoutes/PatrolGhost2.cs" id="9_olcgw"]
 [ext_resource type="PackedScene" uid="uid://cf1ubcspuidxd" path="res://Scenes/teleport.tscn" id="10_olcgw"]
+[ext_resource type="Script" uid="uid://ddbbj2m5pi0tc" path="res://Scripts/GhostAiScripts/VariousPatrolGhostRoutes/PatrolGhost1.cs" id="10_q6lx1"]
+[ext_resource type="Script" uid="uid://crtv1202wkgeu" path="res://Scripts/GhostAiScripts/AStarGhost.cs" id="12_5qtum"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_26yhd"]
 texture = ExtResource("1_ci6au")
@@ -1306,11 +1309,11 @@ position = Vector2(184, 216)
 
 [node name="Ghost2" parent="Ghosts" unique_id=1641559484 instance=ExtResource("5_q0mm3")]
 position = Vector2(184, 232)
-baseColor = "cyan"
+baseColor = "pink"
 
 [node name="Ghost3" parent="Ghosts" unique_id=1490840199 instance=ExtResource("5_q0mm3")]
 position = Vector2(184, 248)
-baseColor = "pink"
+baseColor = "cyan"
 
 [node name="Ghost4" parent="Ghosts" unique_id=1991289568 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 216)
@@ -1318,133 +1321,107 @@ baseColor = "orange"
 
 [node name="Ghost5" parent="Ghosts" unique_id=1713886101 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 232)
-baseColor = "forest"
+baseColor = "green"
 
 [node name="Ghost6" parent="Ghosts" unique_id=984054984 instance=ExtResource("5_q0mm3")]
 position = Vector2(200, 248)
-baseColor = "blue"
+baseColor = "yellow"
 
 [node name="Ghost7" parent="Ghosts" unique_id=505252880 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 216)
-baseColor = "crimson"
+baseColor = "blue"
 
 [node name="Ghost8" parent="Ghosts" unique_id=30689028 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 216)
-baseColor = "gold"
+baseColor = "purple"
 
 [node name="Ghost9" parent="Ghosts" unique_id=2027682439 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 232)
-baseColor = "aqua"
+baseColor = "crimson"
 
 [node name="Ghost10" parent="Ghosts" unique_id=1526812147 instance=ExtResource("5_q0mm3")]
 position = Vector2(216, 248)
-baseColor = "green"
+baseColor = "forest"
 
 [node name="Ghost11" parent="Ghosts" unique_id=1132141995 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 232)
-baseColor = "purple"
+baseColor = "gold"
 
 [node name="Ghost12" parent="Ghosts" unique_id=52707985 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 216)
-baseColor = "yellow"
+baseColor = "aqua"
 
 [node name="Ghost13" parent="Ghosts" unique_id=372885410 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 216)
+baseColor = "pink"
 
 [node name="Ghost14" parent="Ghosts" unique_id=909126176 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 248)
-baseColor = "pink"
+baseColor = "orange"
 
 [node name="Ghost15" parent="Ghosts" unique_id=1101158033 instance=ExtResource("5_q0mm3")]
 position = Vector2(232, 248)
-baseColor = "cyan"
+baseColor = "yellow"
 
 [node name="Ghost16" parent="Ghosts" unique_id=1023801035 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 248)
-baseColor = "orange"
+baseColor = "purple"
 
 [node name="Ghost17" parent="Ghosts" unique_id=700735920 instance=ExtResource("5_q0mm3")]
 position = Vector2(248, 232)
-baseColor = "gold"
+baseColor = "forest"
 
 [node name="Ghost18" parent="Ghosts" unique_id=1386821392 instance=ExtResource("5_q0mm3")]
 position = Vector2(264, 232)
-baseColor = "forest"
+baseColor = "aqua"
 
 [node name="GhostAIs" type="Node" parent="." unique_id=1384817492]
 
-[node name="RandomGhost" type="Node" parent="GhostAIs" unique_id=1475388942 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost")
+[node name="GhostControllerNode" type="Node" parent="GhostAIs" unique_id=1475388942]
 
-[node name="RandomGhost2" type="Node" parent="GhostAIs" unique_id=658618746 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost2")
+[node name="Ghost2ControllerNode" type="Node" parent="GhostAIs" unique_id=658618746]
 
-[node name="RandomGhost3" type="Node" parent="GhostAIs" unique_id=1456444369 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost3")
+[node name="Ghost3ControllerNode" type="Node" parent="GhostAIs" unique_id=1456444369]
 
-[node name="RandomGhost4" type="Node" parent="GhostAIs" unique_id=1494918173 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost4")
+[node name="Ghost4ControllerNode" type="Node" parent="GhostAIs" unique_id=1494918173]
 
-[node name="RandomGhost5" type="Node" parent="GhostAIs" unique_id=1424137008 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost5")
+[node name="Ghost5ControllerNode" type="Node" parent="GhostAIs" unique_id=1424137008]
 
-[node name="RandomGhost6" type="Node" parent="GhostAIs" unique_id=411947454 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost6")
+[node name="Ghost6ControllerNode" type="Node" parent="GhostAIs" unique_id=411947454]
 
-[node name="RandomGhost7" type="Node" parent="GhostAIs" unique_id=1095057536 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
+[node name="Ghost7ControllerNode" type="Node" parent="GhostAIs" unique_id=1095057536 node_paths=PackedStringArray("ghost")]
+script = ExtResource("10_q6lx1")
 ghost = NodePath("../../Ghosts/Ghost7")
 
-[node name="RandomGhost8" type="Node" parent="GhostAIs" unique_id=1419333678 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
+[node name="Ghost8ControllerNode" type="Node" parent="GhostAIs" unique_id=1419333678 node_paths=PackedStringArray("ghost")]
+script = ExtResource("9_olcgw")
 ghost = NodePath("../../Ghosts/Ghost8")
 
-[node name="RandomGhost9" type="Node" parent="GhostAIs" unique_id=302388387 node_paths=PackedStringArray("ghost")]
+[node name="Ghost9ControllerNode" type="Node" parent="GhostAIs" unique_id=302388387 node_paths=PackedStringArray("ghost")]
 script = ExtResource("8_6q3n4")
 ghost = NodePath("../../Ghosts/Ghost9")
 
-[node name="RandomGhost10" type="Node" parent="GhostAIs" unique_id=366586613 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost10")
+[node name="Ghost10ControllerNode" type="Node" parent="GhostAIs" unique_id=366586613]
 
-[node name="RandomGhost11" type="Node" parent="GhostAIs" unique_id=1927664908 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
+[node name="Ghost11ControllerNode" type="Node" parent="GhostAIs" unique_id=1927664908 node_paths=PackedStringArray("ghost")]
+script = ExtResource("12_5qtum")
 ghost = NodePath("../../Ghosts/Ghost11")
 
-[node name="RandomGhost12" type="Node" parent="GhostAIs" unique_id=1162010502 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost12")
+[node name="Ghost12ControllerNode" type="Node" parent="GhostAIs" unique_id=1162010502]
 
-[node name="RandomGhost13" type="Node" parent="GhostAIs" unique_id=686853180 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost13")
+[node name="Ghost13ControllerNode" type="Node" parent="GhostAIs" unique_id=686853180]
 
-[node name="RandomGhost14" type="Node" parent="GhostAIs" unique_id=1146864763 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost14")
+[node name="Ghost14ControllerNode" type="Node" parent="GhostAIs" unique_id=1146864763]
 
-[node name="RandomGhost15" type="Node" parent="GhostAIs" unique_id=361795758 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost15")
+[node name="Ghost15ControllerNode" type="Node" parent="GhostAIs" unique_id=361795758]
 
-[node name="RandomGhost16" type="Node" parent="GhostAIs" unique_id=1636911208 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost16")
+[node name="Ghost16ControllerNode" type="Node" parent="GhostAIs" unique_id=1636911208]
 
-[node name="RandomGhost17" type="Node" parent="GhostAIs" unique_id=506109880 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost17")
+[node name="Ghost17ControllerNode" type="Node" parent="GhostAIs" unique_id=506109880]
 
-[node name="RandomGhost18" type="Node" parent="GhostAIs" unique_id=439794941 node_paths=PackedStringArray("ghost")]
-script = ExtResource("8_6q3n4")
-ghost = NodePath("../../Ghosts/Ghost18")
+[node name="Ghost18ControllerNode" type="Node" parent="GhostAIs" unique_id=439794941]
 
 [node name="GeneticAlgorithm" type="Node" parent="." unique_id=1686479118 node_paths=PackedStringArray("packer")]
 script = ExtResource("7_w7jjh")
 packer = NodePath("../PackerMan")
+aiHasControl = false

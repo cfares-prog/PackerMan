@@ -6,14 +6,16 @@ public partial class Ghost : CharacterBody2D
 	public enum STATE { CHASE, FLEE, REVIVE};
 	
 	private Global manager;
-	private STATE state= STATE.CHASE;
 	[Export]
-	public string baseColor = "red";
-	private string color;
-	[Export]
-	private float baseSpeed = 100.0f;
+	public int timeTillRevived= 10;
+
+	[Export(PropertyHint.Enum, "red,pink,cyan,orange,green,yellow,blue,purple,crimson,forest,gold,aqua")] 
+	public string baseColor { get; private set; }= "red";
+	[Export] private float baseSpeed = 100.0f;
 	private AnimatedSprite2D animatedSprite;
 	public Vector2 direction= Vector2.Zero;
+	private string color;
+	private STATE state= STATE.CHASE;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -71,40 +73,42 @@ public partial class Ghost : CharacterBody2D
 	public override void _PhysicsProcess(double delta) {
 		Velocity = direction * baseSpeed ;
 		MoveAndSlide();
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			Node collider = (Node)GetSlideCollision(i).GetCollider();
+
+			if (collider is PackerMan packer){ if (packer.isPoweredUp()){ DoRevive(); } }
+		}
 	}
 
-	// temporary flee state enabler func
-	public void DoFlee()
+	// flee state enabler func
+	public async void DoFlee()
 	{
 		GD.Print($"{Name}: FLEE!!!");
 		state= STATE.FLEE;
+		SetCollisionMaskValue(3, true);
 	}
-	// temporary chase state enabler func
-	public void DoChase()
+	// chase state enabler func
+	public async void DoChase()
 	{
 		GD.Print($"{Name}: Chase.");
 		state= STATE.CHASE;
+		SetCollisionMaskValue(3, true);
 	}
-	public void goUp()
+	// chase state enabler func
+	public async void DoRevive()
 	{
-		direction= Vector2.Up;
+		GD.Print($"{Name}: Dead.");
+		state= STATE.REVIVE;
+		SetCollisionMaskValue(3, false);
+		await ToSignal(GetTree().CreateTimer(timeTillRevived), SceneTreeTimer.SignalName.Timeout);
+		DoChase();
 	}
-	public void goDown()
-	{
-		direction= Vector2.Down;
-	}
-	public void goLeft()
-	{
-		direction= Vector2.Left;
-	}
-	public void goRight()
-	{
-		direction= Vector2.Right;
-	}
-	public STATE getState()
-	{
-		return state;
-	}
+	public void goUp(){ direction= Vector2.Up; }
+	public void goDown(){ direction= Vector2.Down; }
+	public void goLeft(){ direction= Vector2.Left;}
+	public void goRight(){ direction= Vector2.Right;}
+	public STATE getState(){ return state;}
 
 	public void ResetGame()
 	{

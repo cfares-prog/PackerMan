@@ -4,13 +4,18 @@ using System;
 public partial class PackerMan : CharacterBody2D
 {
     private Global manager;
-	[Export]
-	private float baseSpeed = 100.0f;
-	[Export]
-	private float vulTime = 3.0f;
-	[Export]
-	private float powerTime = 5.0f;
-
+	[Export] private float baseSpeed = 100.0f;
+	[Export] private float vulTime = 3.0f;
+	[Export] private float powerTime = 5.0f;
+	[Export] private int ghostScore= 500;
+	/*
+		passThroughTime dictates in seconds packerman gets to passthrough ghosts 
+		my very shitty atempt at a workarout to allow packer to not get stuck on ghosts hes eaten
+		doesnt work >:(
+		ah and packer now apparently can only eat a ghost if that ghost is moving TOWARDS packer
+		or rather he never could do it any other way due to how collision checks are done
+	*/
+	[Export] private int passThroughTime= 1;
 	private bool powerUp = false;
 	private bool isHit = false;
 	private bool isPlayerControlled = true;
@@ -125,16 +130,15 @@ public partial class PackerMan : CharacterBody2D
 				if (collider is Ghost)
 				{
 					// GD.Print($"{Name}: collided with {collider.Name}");
-					if (powerUp)
-					{
-						// eat ghost
-
-					}
-					else
-					{
-						// lose life
+					if (!powerUp)
+					{// die
 						PackerHit();
 						manager.UpdateLife();
+					}
+					else
+					{// aet ghost
+						manager.AddScore(ghostScore);
+						doPassthrough();
 					}
 				}
 			}
@@ -156,27 +160,20 @@ public partial class PackerMan : CharacterBody2D
 		await ToSignal(GetTree().CreateTimer(vulTime), SceneTreeTimer.SignalName.Timeout);
 		isHit= false;
 	}
-
-	public void goUp()
-	{
-		direction= Vector2.Up;
-	}
-	public void goDown()
-	{
-		direction= Vector2.Down;
-	}
-	public void goLeft()
-	{
-		direction= Vector2.Left;
-	}
-	public void goRight()
-	{
-		direction= Vector2.Right;
-	}
+	public void goUp(){ direction= Vector2.Up;}
+	public void goDown(){ direction= Vector2.Down;}
+	public void goLeft(){ direction= Vector2.Left;}
+	public void goRight(){ direction= Vector2.Right;}
 
 	public void enablePlayerControl(){ isPlayerControlled = true; }
 	public void disablePlayerControl(){ isPlayerControlled = false; }
-
+	public bool isPoweredUp(){ return powerUp; }
+	public async void doPassthrough()
+	{
+		SetCollisionLayerValue(2, false);
+		await ToSignal(GetTree().CreateTimer(passThroughTime), SceneTreeTimer.SignalName.Timeout);
+		SetCollisionLayerValue(2, true);
+	}
 	private void ResetGame()
 	{
 		manager.PackerHitSig -= ResetGame;

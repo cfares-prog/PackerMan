@@ -1,13 +1,19 @@
 using System;
+using System.Text.Json.Serialization;
 
 public class DNA<T>
 {
-	public T[] Genes { get; private set; }
-	public float Fitness { get; private set; }
+    [JsonInclude]
+	public T[] Genes { get; set; }
+
+    [JsonInclude]
+	public float Fitness { get; set; }
 
 	private Random random;
 	private Func<T> getRandomGene;
 	private Func<float> fitnessFunction;
+
+    public DNA() {}
 
 	public DNA(int size, Random random, Func<T> getRandomGene, Func<float> fitnessFunction, bool shouldInitGenes = true)
 	{

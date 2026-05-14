@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://br5rh7qe2evbh"]
+
+[ext_resource type="Script" uid="uid://b3dhbok8en5h" path="res://Scripts/Spawner.cs" id="1_mdv8j"]
+[ext_resource type="PackedScene" uid="uid://cdsqaunc1scga" path="res://Scenes/map.tscn" id="2_xhbpr"]
+
+[node name="Spawner" type="Node2D" unique_id=177875989]
+script = ExtResource("1_mdv8j")
+AgentScene = ExtResource("2_xhbpr")

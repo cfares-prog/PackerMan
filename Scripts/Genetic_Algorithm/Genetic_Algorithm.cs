@@ -14,7 +14,6 @@ public class GeneticAlgorithm<T>
     
     private List<DNA<T>> newPopulation;
     private Random random;
-    private float fitnessSum;
     private int dnaSize;
     private Func<T> getRandomGene;
     private Func<float> fitnessFunction;
@@ -50,6 +49,11 @@ public class GeneticAlgorithm<T>
     public void SaveToDisk()
     {
         int genNum = this.Generation + 1;
+        foreach ( var dna in this.Population)
+        {
+            dna.Fitness = fitnessFunction();
+        }
+        
         var data = new SaveData
         {
             Generation = genNum,
@@ -111,8 +115,6 @@ public class GeneticAlgorithm<T>
     {
         if (Population.Count <= 0) return;
 
-        CalculateFitness();
-
         newPopulation.Clear();
 
         for (int i = 0; i < Population.Count; i++)
@@ -135,7 +137,8 @@ public class GeneticAlgorithm<T>
 
     private DNA<T> ChooseParent()
     {
-        double randomNumber = random.NextDouble() * fitnessSum;
+        float fitness = fitnessFunction();
+        double randomNumber = random.NextDouble() * fitness;
         double cumulativeSum = 0;
 
         for (int i = 0; i < Population.Count; i++)
@@ -148,24 +151,5 @@ public class GeneticAlgorithm<T>
         }
 
         return Population[random.Next(Population.Count)];
-    }
-
-    private void CalculateFitness()
-    {
-        fitnessSum = 0;
-        DNA<T> best = Population[0];
-
-        for (int i = 0; i < Population.Count; i++)
-        {
-            fitnessSum += Population[i].CalculateFitness();
-
-            if (Population[i].Fitness > best.Fitness)
-            {
-                best = Population[i];
-            }
-        }
-
-        BestFitness = best.Fitness;
-        best.Genes.CopyTo(BestGenes, 0);
     }
 }

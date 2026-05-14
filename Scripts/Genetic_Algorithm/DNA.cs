@@ -25,6 +25,13 @@ public class DNA<T>
 		}
 	}
 
+    public void RestoreDependencies(Random rng, Func<T> geneFunc, Func<int, float> fitnessFunc)
+    {
+        this.random = rng;
+        this.getRandomGene = geneFunc;
+        this.fitnessFunction = fitnessFunc;
+    }
+
 	public float CalculateFitness(int index)
 	{
 		Fitness = fitnessFunction(index);

@@ -1,132 +1,176 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Godot;
 
 public class GeneticAlgorithm<T>
 {
-	public List<DNA<T>> Population { get; private set; }
-	public int Generation { get; private set; }
-	public float BestFitness { get; private set; }
-	public T[] BestGenes { get; private set; }
+    public List<DNA<T>> Population { get; private set; }
+    public int Generation { get; private set; }
+    public float BestFitness { get; private set; }
+    public T[] BestGenes { get; private set; }
 
-	public int Elitism;
-	public float MutationRate;
-	
-	private List<DNA<T>> newPopulation;
-	private Random random;
-	private float fitnessSum;
-	private int dnaSize;
-	private Func<T> getRandomGene;
-	private Func<int, float> fitnessFunction;
+    public float MutationRate;
+    
+    private List<DNA<T>> newPopulation;
+    private Random random;
+    private float fitnessSum;
+    private int dnaSize;
+    private Func<T> getRandomGene;
+    private Func<int, float> fitnessFunction;
 
-	public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction,
-		int elitism, float mutationRate = 0.01f)
-	{
-		Generation = 1;
-		Elitism = elitism;
-		MutationRate = mutationRate;
-		Population = new List<DNA<T>>(populationSize);
-		newPopulation = new List<DNA<T>>(populationSize);
-		this.random = random;
-		this.dnaSize = dnaSize;
-		this.getRandomGene = getRandomGene;
-		this.fitnessFunction = fitnessFunction;
+    private const string SavePath = "user://ga_checkpoint.json";
 
-		BestGenes = new T[dnaSize];
+    // Data transfer object
+    public class SaveData
+    {
+        public int Generation { get; set; }
+        public float BestFitness { get; set; }
+        public T[] BestGenes { get; set; }
+        public List<DNA<T>> Population { get; set; }
+    }
 
-		for (int i = 0; i < populationSize; i++)
-		{
-			Population.Add(new DNA<T>(dnaSize, random, getRandomGene, fitnessFunction, shouldInitGenes: true));
-		}
-	}
+    public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction, float mutationRate = 0.01f)
+    {
+        Generation = 1;
+        MutationRate = mutationRate;
+        Population = new List<DNA<T>>(populationSize);
+        newPopulation = new List<DNA<T>>(populationSize);
+        this.random = random;
+        this.dnaSize = dnaSize;
+        this.getRandomGene = getRandomGene;
+        this.fitnessFunction = fitnessFunction;
 
-	public void NewGeneration(int numNewDNA = 0, bool crossoverNewDNA = false)
-	{
-		int finalCount = Population.Count + numNewDNA;
+        BestGenes = new T[dnaSize];
 
-		if (finalCount <= 0) {
-			return;
-		}
+        for (int i = 0; i < populationSize; i++)
+        {
+            Population.Add(new DNA<T>(dnaSize, random, getRandomGene, fitnessFunction, shouldInitGenes: true));
+        }
+    }
 
-		if (Population.Count > 0) {
-			CalculateFitness();
-			Population.Sort(CompareDNA);
-		}
-		newPopulation.Clear();
+    public void SaveToDisk()
+    {
+        var data = new SaveData
+        {
+            Generation = this.Generation,
+            BestFitness = this.BestFitness,
+            BestGenes = this.BestGenes,
+            Population = this.Population 
+        };
 
-		for (int i = 0; i < Population.Count; i++)
-		{
-			if (i < Elitism && i < Population.Count)
-			{
-				newPopulation.Add(Population[i]);
-			}
-			else if (i < Population.Count || crossoverNewDNA)
-			{
-				DNA<T> parent1 = ChooseParent();
-				DNA<T> parent2 = ChooseParent();
+        var options = new JsonSerializerOptions { WriteIndented = true, IncludeFields = true };
+        string jsonString = JsonSerializer.Serialize(data, options);
 
-				DNA<T> child = parent1.Crossover(parent2);
+        using var file = FileAccess.Open(SavePath, FileAccess.ModeFlags.Write);
+        if (file != null)
+        {
+            file.StoreString(jsonString);
+            GD.Print($"Generation {Generation} saved to {SavePath}");
+        }
+    }
 
-				child.Mutate(MutationRate);
+    public bool LoadFromDisk()
+    {
+        if (!FileAccess.FileExists(SavePath))
+        {
+            GD.PrintErr("Save file does not exist.");
+            return false;
+        }
 
-				newPopulation.Add(child);
-			}
-			else
-			{
-				newPopulation.Add(new DNA<T>(dnaSize, random, getRandomGene, fitnessFunction, shouldInitGenes: true));
-			}
-		}
+        try
+        {
+            using var file = FileAccess.Open(SavePath, FileAccess.ModeFlags.Read);
+            string jsonString = file.GetAsText();
 
-		List<DNA<T>> tmpList = Population;
-		Population = newPopulation;
-		newPopulation = tmpList;
+            var options = new JsonSerializerOptions { IncludeFields = true };
+            var loadedData = JsonSerializer.Deserialize<SaveData>(jsonString, options);
 
-		Generation++;
-	}
-	
-	private int CompareDNA(DNA<T> a, DNA<T> b)
-	{
-		if (a.Fitness > b.Fitness) {
-			return -1;
-		} else if (a.Fitness < b.Fitness) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+            if (loadedData == null || loadedData.Population == null)
+            {
+                GD.PrintErr("Failed to parse GA JSON data.");
+                return false;
+            }
 
-	private void CalculateFitness()
-	{
-		fitnessSum = 0;
-		DNA<T> best = Population[0];
+            this.Generation = loadedData.Generation;
+            this.BestFitness = loadedData.BestFitness;
+            this.BestGenes = loadedData.BestGenes;
+            this.Population = loadedData.Population;
 
-		for (int i = 0; i < Population.Count; i++)
-		{
-			fitnessSum += Population[i].CalculateFitness(i);
+            foreach (var dna in this.Population)
+            {
+                dna.RestoreDependencies(this.random, this.getRandomGene, this.fitnessFunction);
+            }
 
-			if (Population[i].Fitness > best.Fitness)
-			{
-				best = Population[i];
-			}
-		}
+            GD.Print($"Successfully resumed GA at Generation {Generation}.");
+            return true;
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"Exception while loading GA state: {e.Message}");
+            return false;
+        }
+    }
 
-		BestFitness = best.Fitness;
-		best.Genes.CopyTo(BestGenes, 0);
-	}
+    public void NewGeneration()
+    {
+        if (Population.Count <= 0) return;
 
-	private DNA<T> ChooseParent()
-	{
-		double randomNumber = random.NextDouble() * fitnessSum;
+        CalculateFitness();
 
-		for (int i = 0; i < Population.Count; i++)
-		{
-			if (randomNumber < Population[i].Fitness)
-			{
-				return Population[i];
-			}
+        newPopulation.Clear();
 
-			randomNumber -= Population[i].Fitness;
-		}
+        for (int i = 0; i < Population.Count; i++)
+        {
+            DNA<T> parent1 = ChooseParent();
+            DNA<T> parent2 = ChooseParent();
 
-		return null;
-	}
+            DNA<T> child = parent1.Crossover(parent2);
+            child.Mutate(MutationRate);
+
+            newPopulation.Add(child);
+        }
+
+        var tmpList = Population;
+        Population = newPopulation;
+        newPopulation = tmpList;
+
+        Generation++;
+    }
+
+    private DNA<T> ChooseParent()
+    {
+        double randomNumber = random.NextDouble() * fitnessSum;
+        double cumulativeSum = 0;
+
+        for (int i = 0; i < Population.Count; i++)
+        {
+            cumulativeSum += Population[i].Fitness;
+            if (cumulativeSum >= randomNumber)
+            {
+                return Population[i];
+            }
+        }
+
+        return Population[random.Next(Population.Count)];
+    }
+
+    private void CalculateFitness()
+    {
+        fitnessSum = 0;
+        DNA<T> best = Population[0];
+
+        for (int i = 0; i < Population.Count; i++)
+        {
+            fitnessSum += Population[i].CalculateFitness(i);
+
+            if (Population[i].Fitness > best.Fitness)
+            {
+                best = Population[i];
+            }
+        }
+
+        BestFitness = best.Fitness;
+        best.Genes.CopyTo(BestGenes, 0);
+    }
 }

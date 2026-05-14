@@ -25,8 +25,6 @@ public class GeneticAlgorithm<T>
     public class SaveData
     {
         public int Generation { get; set; }
-        public float BestFitness { get; set; }
-        public T[] BestGenes { get; set; }
         public List<DNA<T>> Population { get; set; }
     }
 
@@ -51,11 +49,10 @@ public class GeneticAlgorithm<T>
 
     public void SaveToDisk()
     {
+        int genNum = this.Generation + 1;
         var data = new SaveData
         {
-            Generation = this.Generation,
-            BestFitness = this.BestFitness,
-            BestGenes = this.BestGenes,
+            Generation = genNum,
             Population = this.Population 
         };
 
@@ -91,10 +88,8 @@ public class GeneticAlgorithm<T>
                 GD.PrintErr("Failed to parse GA JSON data.");
                 return false;
             }
-
+        
             this.Generation = loadedData.Generation;
-            this.BestFitness = loadedData.BestFitness;
-            this.BestGenes = loadedData.BestGenes;
             this.Population = loadedData.Population;
 
             foreach (var dna in this.Population)

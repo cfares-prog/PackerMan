@@ -17,7 +17,7 @@ public class GeneticAlgorithm<T>
     private float fitnessSum;
     private int dnaSize;
     private Func<T> getRandomGene;
-    private Func<int, float> fitnessFunction;
+    private Func<float> fitnessFunction;
 
     private const string SavePath = "user://ga_checkpoint.json";
 
@@ -30,7 +30,7 @@ public class GeneticAlgorithm<T>
         public List<DNA<T>> Population { get; set; }
     }
 
-    public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction, float mutationRate = 0.01f)
+    public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<T> getRandomGene, Func<float> fitnessFunction, float mutationRate = 0.01f)
     {
         Generation = 1;
         MutationRate = mutationRate;
@@ -162,7 +162,7 @@ public class GeneticAlgorithm<T>
 
         for (int i = 0; i < Population.Count; i++)
         {
-            fitnessSum += Population[i].CalculateFitness(i);
+            fitnessSum += Population[i].CalculateFitness();
 
             if (Population[i].Fitness > best.Fitness)
             {

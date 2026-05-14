@@ -7,9 +7,9 @@ public class DNA<T>
 
 	private Random random;
 	private Func<T> getRandomGene;
-	private Func<int, float> fitnessFunction;
+	private Func<float> fitnessFunction;
 
-	public DNA(int size, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction, bool shouldInitGenes = true)
+	public DNA(int size, Random random, Func<T> getRandomGene, Func<float> fitnessFunction, bool shouldInitGenes = true)
 	{
 		Genes = new T[size];
 		this.random = random;
@@ -25,16 +25,16 @@ public class DNA<T>
 		}
 	}
 
-    public void RestoreDependencies(Random rng, Func<T> geneFunc, Func<int, float> fitnessFunc)
+    public void RestoreDependencies(Random rng, Func<T> geneFunc, Func<float> fitnessFunc)
     {
         this.random = rng;
         this.getRandomGene = geneFunc;
         this.fitnessFunction = fitnessFunc;
     }
 
-	public float CalculateFitness(int index)
+	public float CalculateFitness()
 	{
-		Fitness = fitnessFunction(index);
+		Fitness = fitnessFunction();
 		return Fitness;
 	}
 

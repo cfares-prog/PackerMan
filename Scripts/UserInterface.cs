@@ -26,6 +26,7 @@ public partial class UserInterface : Control
 	private void TimerIter()
 	{
         gameManager.time++;
+        gameManager.AddScore(1);
         int minutes = gameManager.time / 60;
         int seconds = gameManager.time % 60;
 

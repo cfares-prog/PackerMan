@@ -17,7 +17,7 @@ public partial class GeneticAlgorithm : Node
     private int currentIndividualIndex = 0;
     private int currentGeneIndex = 0;
     private float timer = 0;
-    
+    private Global manager;
     private Vector2 startPosition;
 
     public override void _Ready()
@@ -25,6 +25,9 @@ public partial class GeneticAlgorithm : Node
         if (packer == null) return;
         
         startPosition = packer.GlobalPosition;
+
+		manager = GetNode<Global>("/root/Global");
+		manager.PackerHitSig += ResetGame;
 
         if (aiHasControl)
         {
@@ -36,9 +39,10 @@ public partial class GeneticAlgorithm : Node
                 random,
                 GetRandomDirection,
                 CalculateFitness,
-                elitism: 3,
                 mutationRate: mutationRate
             );
+
+            ga.LoadFromDisk();
         }
     }
 
@@ -95,10 +99,14 @@ public partial class GeneticAlgorithm : Node
 
     private int GetRandomDirection() => random.Next(4);
 
-    private float CalculateFitness(int index)
+    private float CalculateFitness()
     {
+        return manager.Score;
+    }
 
-        float distanceTravelled = packer.GlobalPosition.DistanceTo(startPosition);
-        return distanceTravelled; 
+    private void ResetGame()
+    {
+        ga.SaveToDisk();
+        manager.PackerHitSig -= ResetGame;
     }
 }

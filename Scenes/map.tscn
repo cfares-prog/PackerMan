@@ -1424,4 +1424,3 @@ ghost = NodePath("../../Ghosts/Ghost11")
 [node name="GeneticAlgorithm" type="Node" parent="." unique_id=1686479118 node_paths=PackedStringArray("packer")]
 script = ExtResource("7_w7jjh")
 packer = NodePath("../PackerMan")
-aiHasControl = false
